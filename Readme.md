@@ -1,89 +1,121 @@
-# Promos
-Aplikasi sederhana sesuai studi kasus yang diberikan dosen untuk memenuhi tugas UAS. Aplikasi ini berfungsi untuk
-simulasi pembelian makanan/minuman dengan implementasi promo/voucher.
+# UAS Pemrograman
+Aplikasi ini berfungsi untuk simulasi pembelian makanan/minuman 
+dengan implementasi cupon.
 
 ## Scope and Functionalities
-- User dapat melihat daftar makanan yang ditawarkan
-- User dapat memasukkan atau menghapus makanan pilihan ke dalam keranjang
-- User dapat melihat subtotal makanan yang terdapat pada keranjang
+- User dapat melihat daftar menu yang ditawarkan
+- User dapat menambahkan atau menghapus menu pilihan ke dalam keranjang
 - User dapat melihat daftar voucher yang ditawarkan
 - User dapat menggunakan salah satu voucher
-- User dapat melihat harga total termasuk potongannya
 
 ## How Does it works?
-1. Apa aja model yang digunakan pada project ini? <br>
-    saya membuat 4 model yaitu model item untuk makanan atau minuman, model keranjangBelanja untuk menaruh pembelian, model payment untuk 
-mengurusi total harga beli, dan model Voucher untuk daftar vouchernya
-2. Apa fungsi MainWindowController.cs?
-controller ini digunakan untuk melakukan beberapa operasi. Seperti menambahkan item dan voucher, menghapus item dan voucher, lalu untuk mendapatkan data list
-dari item yang dibeli dan voucher yang digunakan.
-3. Alur programnya gimana sih?
- dimulai dari Penawaran.xaml.cs, disini dibuat object item dan akan ditambahkan pada sebuah list, yang nantinya akan ditampilkan
-pada sebuah list box
+```csharp
+        private void generateListCupon()
+        {
+            Model.Cupon Cupon1 = new Model.Cupon(title: "Promo Tebus Murah Diskon 30% max. 30.000", discInPercent: 30);
+            Model.Cupon Cupon2 = new Model.Cupon(title: "Promo Awal Tahun Diskon 25%", discInPercent: 25);
+            Model.Cupon Cupon3 = new Model.Cupon(title: "Promo Natal Potongan 10000", disc: 10000);
+
+            CuponController.addItem(Cupon1);
+            CuponController.addItem(Cupon2);
+            CuponController.addItem(Cupon3);
+
+            DaftarCupon.Items.Refresh();
+        }
+```
+digunakan untuk mengisi daftar cupon dan dimasukkan kedalam
+list
+
+<br>
+
+```csharp
+        public void OnPilihCuponChangedListener(Cupon item)
+        {
+            controller.addCupon(item);
+        }
+```
+digunakan untuk menambahkan kupon yang dipilih
+
+<br>
 
 ```csharp
         private void generateContentPenawaran()
         {
-            Item coffeLate = new Item("Coffe Late", 30000);
-            Item blackTea = new Item("BlackTea", 20000);
-            Item milkShake = new Item("Milk Shake", 15000);
-            Item watermelonJuice = new Item("Watermelon Juice", 25000);
-            Item lemonSquash = new Item("Lemon Squash", 30000);
-            Item pizza = new Item("Pizza", 75000);
-            Item friedRice = new Item("Fried Rice Special", 45000);
+            Item menu1 = new Item("Coffe Late", 30000);
+            Item menu2 = new Item("BlackTea", 20000);
+            Item menu3 = new Item("Milk Shake", 15000);
+            Item menu4 = new Item("Watermelon Juice", 25000);
+            Item menu5 = new Item("Lemon Squash", 30000);
+            Item menu6 = new Item("Pizza", 75000);
+            Item menu7 = new Item("Fried Rice Special", 45000);
 
-            Penawarancontroller.addItem(coffeLate);
-            Penawarancontroller.addItem(blackTea);
-            Penawarancontroller.addItem(milkShake);
-            Penawarancontroller.addItem(watermelonJuice);
-            Penawarancontroller.addItem(lemonSquash);
-            Penawarancontroller.addItem(pizza);
-            Penawarancontroller.addItem(friedRice);
+            Penawarancontroller.addItem(menu1);
+            Penawarancontroller.addItem(menu2);
+            Penawarancontroller.addItem(menu3);
+            Penawarancontroller.addItem(menu4);
+            Penawarancontroller.addItem(menu5);
+            Penawarancontroller.addItem(menu6);
+            Penawarancontroller.addItem(menu7);
 
             listPenawaran.Items.Refresh();
         }
 ```
+digunakan untuk menambahkan daftar menu kedalam list
 
 <br>
 
-lalu pada PilihVoucher.xaml.cs, disini fungsinya sama dengan Penawaran.xaml.cs. Kita membuat object voucher dari model Voucher tadi, dan dimasukkan kedalam list serta ditampilkan pada listbox
 ```csharp
-        private void generateListVoucher()
-        {
-            Model.Voucher awalTahun = new Model.Voucher(title: "Promo Awal Tahun Diskon 25%", discInPercent: 25);
-            Model.Voucher tebusMurah = new Model.Voucher(title: "Promo Tebus Murah Diskon 30% atau max. 30.000", discInPercent: 30);
-            Model.Voucher promoNatal = new Model.Voucher(title: "Promo Natal Potongan 10000", disc: 10000);
-
-            voucherController.addItem(awalTahun);
-            voucherController.addItem(tebusMurah);
-            voucherController.addItem(promoNatal);
-
-            DaftarVoucher.Items.Refresh();
-        }
+        public void onPenawaranSelected(Item item)
+                {
+                    controller.addItem(item);
+                }
 ```
+digunakan untuk menambahkan item yang dipilih kedalam list menu pesanan
 
 <br>
 
-lalu pada MainWindow.xaml.cs terdapat inisialisasi dan membuat beberapa instance. Kita membuat instance dari payment yang
-akan digunakan pada keranjangBelanja. Nah keranjangBelanja ini juga akan digunakan pada mainWindowController.
-
 ```csharp
-        public MainWindow()
-        {
-            InitializeComponent();
+        private void calculateSubTotal()
+                {
+                    double subtotal = 0;
+                    double potongan = 0;
+                    foreach (Item item in itemBelanja)
+                    {
+                        subtotal += item.price;
+                    }
 
-            payment = new Payment(this);
+                    foreach (Cupon Cupon in itemCupon)
+                    {
+                        if (Cupon.diskonPersen != 0)
+                        {
 
-            KeranjangBelanja keranjangBelanja = new KeranjangBelanja(payment, this);
+                            if(Cupon.diskonPersen == 30)
+                            {
+                                if(subtotal >= 100000)
+                                {
+                                    potongan -= 30000;
+                                }
+                        
+                                else
+                                {
+                                    potongan -= subtotal * (Cupon.diskonPersen / 100);
+                                }
+                            } 
 
-            controller = new MainWindowController(keranjangBelanja);
+                            else 
+                            { 
+                                potongan -= subtotal * (Cupon.diskonPersen/100);
+                            }
+                        }
 
-            listBoxPesanan.ItemsSource = controller.getSelectedItems();
-            listBoxPakaiVoucher.ItemsSource = controller.getSelectedVouchers();
+                        if(Cupon.diskon != 0)
+                        {
+                            potongan -= Cupon.diskon;
+                        }
+                    }
+                    payment.updateTotal(subtotal, potongan); 
 
-            initializeView();
 
+                }
 ```
-
-selain itu juga dibuatkan 2 baris kode untuk memasukkan data list item dan voucher ke masing - masing listbox. Selain pembuatan instance
-juga terdapat beberapa operasi yang dilakukan.
+digunakan untuk perhitungan grant total semua pesanan dan juga cupon yang digunakan
