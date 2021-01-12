@@ -1,3 +1,5 @@
+# Indra Putra Gemilang 19.11.2780
+
 # UAS Pemrograman
 Aplikasi ini berfungsi untuk simulasi pembelian makanan/minuman 
 dengan implementasi cupon.
