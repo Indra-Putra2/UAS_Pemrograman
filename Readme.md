@@ -3,10 +3,12 @@ Aplikasi ini berfungsi untuk simulasi pembelian makanan/minuman
 dengan implementasi cupon.
 
 ## Scope and Functionalities
-- User dapat melihat daftar menu yang ditawarkan
-- User dapat menambahkan atau menghapus menu pilihan ke dalam keranjang
+- User dapat melihat daftar makanan yang ditawarkan
+- User dapat memasukkan atau menghapus makanan pilihan ke dalam keranjang
+- User dapat melihat subtotal makanan yang terdapat pada keranjang
 - User dapat melihat daftar voucher yang ditawarkan
 - User dapat menggunakan salah satu voucher
+- User dapat melihat harga total termasuk potongannya
 
 ## How Does it works?
 ```csharp
